@@ -89,3 +89,34 @@ TEST(AdjacencyList, iterator) {
 		}
 	}
 }
+
+TEST(AdjacencyList, depthFirstIterator) {
+	{
+		AdjacencyList graph;
+		EXPECT_EQ(graph.begin(), graph.end());
+	}
+	{
+		AdjacencyList graph({
+			{0, 1},
+			{1, 2},
+			{0, 2},
+			{1, 0},
+			{2, 3},
+			{3, 0},
+		});
+		std::vector<std::tuple<size_t, size_t>> expected{
+			{0, 1},
+			{1, 2},
+			{2, 3},
+			{3, 0},
+			{1, 0},
+			{0, 2},
+		};
+
+		size_t i = 0;
+		for (auto iter = graph.begin_depth_iter(); iter != graph.end_depth_iter(); ++iter) {
+			EXPECT_EQ(*iter, expected[i]) << graph;
+			++i;
+		}
+	}
+}

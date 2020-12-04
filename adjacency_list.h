@@ -37,12 +37,20 @@ public:
 		_list.resize(std::max(_list.size(), new_node_count));
 	}
 
-	Iterator<AdjacencyList> begin() const {
-		return Iterator<AdjacencyList>(*this);
+	Iterator<AdjacencyList, Traversal::BreadthFirst> begin() const {
+		return Iterator<AdjacencyList, Traversal::BreadthFirst>(*this);
 	}
 
-	Iterator<AdjacencyList> end() const {
-		return Iterator<AdjacencyList>::end();
+	Iterator<AdjacencyList, Traversal::BreadthFirst> end() const {
+		return Iterator<AdjacencyList, Traversal::BreadthFirst>::end();
+	}
+
+	Iterator<AdjacencyList, Traversal::DepthFirst> begin_depth_iter() const {
+		return Iterator<AdjacencyList, Traversal::DepthFirst>(*this);
+	}
+
+	Iterator<AdjacencyList, Traversal::DepthFirst> end_depth_iter() const {
+		return Iterator<AdjacencyList, Traversal::DepthFirst>::end();
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const AdjacencyList& matrix) {

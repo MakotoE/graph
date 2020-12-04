@@ -24,7 +24,12 @@ struct [[maybe_unused]] hash<Visited> {
 };
 }
 
-template <class Graph>
+enum class Traversal {
+	BreadthFirst,
+	DepthFirst,
+};
+
+template <class Graph, Traversal traversal>
 class Iterator {
 public:
 	static Iterator end() {
@@ -48,8 +53,12 @@ public:
 				if (_graph.contains_edge(node_a, node_b)
 					// Edge has not been visited
 					&& _visited.insert(Visited{node_a, node_b}).second
-					) {
-					_queue.push_back(node_b);
+				) {
+					if constexpr (traversal == Traversal::BreadthFirst) {
+						_queue.push_back(node_b);
+					} else {
+						_queue.push_front(node_b);
+					}
 					_curr = {node_a, node_b};
 					return *this;
 				}

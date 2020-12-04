@@ -50,12 +50,20 @@ public:
 		_matrix = std::move(new_matrix);
 	}
 
-	Iterator<AdjacencyMatrix> begin() const {
-		return Iterator<AdjacencyMatrix>(*this);
+	Iterator<AdjacencyMatrix, Traversal::BreadthFirst> begin() const {
+		return Iterator<AdjacencyMatrix, Traversal::BreadthFirst>(*this);
 	}
 
-	Iterator<AdjacencyMatrix> end() const {
-		return Iterator<AdjacencyMatrix>::end();
+	Iterator<AdjacencyMatrix, Traversal::BreadthFirst> end() const {
+		return Iterator<AdjacencyMatrix, Traversal::BreadthFirst>::end();
+	}
+
+	Iterator<AdjacencyMatrix, Traversal::DepthFirst> begin_depth_iter() const {
+		return Iterator<AdjacencyMatrix, Traversal::DepthFirst>(*this);
+	}
+
+	Iterator<AdjacencyMatrix, Traversal::DepthFirst> end_depth_iter() const {
+		return Iterator<AdjacencyMatrix, Traversal::DepthFirst>::end();
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const AdjacencyMatrix& matrix) {
