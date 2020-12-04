@@ -1,7 +1,7 @@
 #ifndef GRAPH__ADJACENCY_MATRIX_H_
 #define GRAPH__ADJACENCY_MATRIX_H_
 
-#include "visited.h"
+#include "iterator.h"
 #include <vector>
 #include <cmath>
 #include <list>
@@ -10,67 +10,6 @@
 
 class AdjacencyMatrix {
 public:
-	class Iterator {
-	public:
-		static Iterator end() {
-			Iterator result({});
-			result._queue = {};
-			result._curr = {-1, -1};
-			return result;
-		}
-
-		Iterator(const AdjacencyMatrix& matrix)
-			: _graph(matrix)
-			  , _queue({0}) {
-			operator++();
-		}
-
-		Iterator& operator++() {
-			while (!_queue.empty()) {
-				size_t node_a = _queue.front();
-				for (size_t i = 0; i < _graph.node_count() - std::get<1>(_curr); ++i) {
-					size_t node_b = i + std::get<1>(_curr);
-					if (_graph.contains_edge(node_a, node_b)
-						// Edge has not been visited
-						&& _visited.insert(Visited{node_a, node_b}).second
-					) {
-						_queue.push_back(node_b);
-						_curr = {node_a, node_b};
-						return *this;
-					}
-
-					if (_graph.contains_edge(node_b, node_a)
-						&& _visited.insert(Visited{node_b, node_a}).second
-						) {
-						_curr = {node_b, node_a};
-						return *this;
-					}
-				}
-				_queue.pop_front();
-			}
-			_curr = {-1, -1};
-			return *this;
-		}
-
-		std::tuple<size_t, size_t> operator*() {
-			return _curr;
-		}
-
-		bool operator==(const Iterator& rhs) const {
-			return std::tie(_queue, _curr) == std::tie(rhs._queue, rhs._curr);
-		}
-
-		bool operator!=(const Iterator& rhs) const {
-			return !(rhs == *this);
-		}
-
-	private:
-		const AdjacencyMatrix& _graph;
-		std::list<size_t> _queue;
-		std::unordered_set<Visited> _visited;
-		std::tuple<size_t, size_t> _curr;
-	};
-
 	AdjacencyMatrix() = default;
 
 	AdjacencyMatrix(const std::initializer_list<std::tuple<size_t, size_t>>& list)
@@ -86,7 +25,7 @@ public:
 	}
 
 	size_t node_count() const {
-		return std::sqrt(_matrix.size());
+		return static_cast<size_t>(std::sqrt(_matrix.size()));
 	}
 
 	bool contains_edge(size_t node_a, size_t node_b) const {
@@ -111,12 +50,12 @@ public:
 		_matrix = std::move(new_matrix);
 	}
 
-	Iterator begin() const {
-		return {*this};
+	Iterator<AdjacencyMatrix> begin() const {
+		return Iterator<AdjacencyMatrix>(*this);
 	}
 
-	Iterator end() const {
-		return Iterator::end();
+	Iterator<AdjacencyMatrix> end() const {
+		return Iterator<AdjacencyMatrix>::end();
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const AdjacencyMatrix& matrix) {
