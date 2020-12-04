@@ -6,5 +6,5 @@ add_compile_options(-Wall -Wextra -pedantic)
 
 add_subdirectory(tests)
 
-add_library(graph adjacency_matrix.h)
+add_library(graph adjacency_matrix.h adjacency_list.h)
 set_target_properties(graph PROPERTIES LINKER_LANGUAGE CXX)

@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "../adjacency_matrix.h"
+#include <gtest/gtest.h>
 
 TEST(AdjacencyMatrix, contains_edge) {
 	struct Test {
