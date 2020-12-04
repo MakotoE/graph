@@ -23,6 +23,12 @@ TEST(AdjacencyMatrix, contains_edge) {
 			true,
 		},
 		{
+			{{0, 1}},
+			1,
+			0,
+			false,
+		},
+		{
 			{{0, 0}},
 			0,
 			0,
@@ -58,6 +64,12 @@ TEST(AdjacencyMatrix, contains_edge) {
 			2,
 			true,
 		},
+		{
+			{{0, 1}, {1, 0}},
+			1,
+			0,
+			true,
+		},
 	};
 
 	for (size_t i = 0; i < tests.size(); ++i) {
@@ -82,14 +94,15 @@ TEST(AdjacencyMatrix, iterator) {
 		});
 		std::vector<std::tuple<size_t, size_t>> expected{
 			{0, 1},
+			{1, 0},
 			{0, 2},
-			{0, 3},
-			{2, 3},
+			{3, 0},
 			{1, 2},
+			{2, 3},
 		};
 		size_t i = 0;
 		for (auto edge : graph) {
-			EXPECT_EQ(edge, expected[i]) << i;
+			EXPECT_EQ(edge, expected[i]) << graph;
 			++i;
 		}
 	}

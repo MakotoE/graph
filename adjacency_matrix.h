@@ -13,8 +13,7 @@ public:
 	size_t b;
 
 	bool operator==(const Visited& rhs) const {
-		return std::tie(a, b) == std::tie(rhs.a, rhs.b)
-			|| std::tie(a, b) == std::tie(rhs.b, rhs.a);
+		return std::tie(a, b) == std::tie(rhs.a, rhs.b);
 	}
 };
 
@@ -22,7 +21,7 @@ namespace std {
 template<>
 struct hash<Visited> {
 	std::size_t operator()(const Visited& key) const {
-		return (key.a + 17) * (key.b + 17);
+		return key.a * 31 + key.b;
 	}
 };
 }
@@ -50,12 +49,18 @@ public:
 				for (size_t i = 0; i < _graph.node_count() - std::get<1>(_curr); ++i) {
 					size_t node_b = i + std::get<1>(_curr);
 					if (_graph.contains_edge(node_a, node_b)
-						// Nodes have not been visited
-						&& _visited.find(Visited{node_a, node_b}) == _visited.cend()
+						// Edge has not been visited
+						&& _visited.insert(Visited{node_a, node_b}).second
 					) {
-						_visited.insert(Visited{node_a, node_b});
 						_queue.push_back(node_b);
 						_curr = {node_a, node_b};
+						return *this;
+					}
+
+					if (_graph.contains_edge(node_b, node_a)
+						&& _visited.insert(Visited{node_b, node_a}).second
+						) {
+						_curr = {node_b, node_a};
 						return *this;
 					}
 				}
@@ -96,7 +101,6 @@ public:
 	void insert_edge(size_t node_a, size_t node_b) {
 		reserve(std::max(node_a, node_b) + 1);
 		_matrix[node_a * node_count() + node_b] = true;
-		_matrix[node_b * node_count() + node_a] = true;
 	}
 
 	size_t node_count() const {
