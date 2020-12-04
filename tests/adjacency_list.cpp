@@ -59,3 +59,33 @@ TEST(AdjacencyList, contains_edge) {
 		EXPECT_EQ(graph.contains_edge(tests[i].node_a, tests[i].node_b), tests[i].expected) << i;
 	}
 }
+
+TEST(AdjacencyList, iterator) {
+	{
+		AdjacencyList graph;
+		EXPECT_EQ(graph.begin(), graph.end());
+	}
+	{
+		AdjacencyList graph({
+		  {0, 1},
+		  {1, 2},
+		  {0, 2},
+		  {1, 0},
+		  {2, 3},
+		  {3, 0},
+		});
+		std::vector<std::tuple<size_t, size_t>> expected{
+			{0, 1},
+			{1, 0},
+			{0, 2},
+			{3, 0},
+			{1, 2},
+			{2, 3},
+		};
+		size_t i = 0;
+		for (auto edge : graph) {
+			EXPECT_EQ(edge, expected[i]) << graph;
+			++i;
+		}
+	}
+}

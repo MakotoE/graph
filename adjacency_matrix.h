@@ -1,30 +1,12 @@
 #ifndef GRAPH__ADJACENCY_MATRIX_H_
 #define GRAPH__ADJACENCY_MATRIX_H_
 
+#include "visited.h"
 #include <vector>
 #include <cmath>
 #include <list>
 #include <unordered_set>
 #include <ostream>
-
-class Visited {
-public:
-	size_t a;
-	size_t b;
-
-	bool operator==(const Visited& rhs) const {
-		return std::tie(a, b) == std::tie(rhs.a, rhs.b);
-	}
-};
-
-namespace std {
-template<>
-struct hash<Visited> {
-	std::size_t operator()(const Visited& key) const {
-		return key.a * 31 + key.b;
-	}
-};
-}
 
 class AdjacencyMatrix {
 public:
